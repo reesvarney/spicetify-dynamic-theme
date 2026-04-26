@@ -1,0 +1,12 @@
+{
+  "name": "Dynamic Dark/ Light Theme",
+  "description": "Toggle between dark and light themes based on the default appearance of the app",
+  "preview": "theme.png",
+  "readme": "README.md",
+  "usercss": "user.css",
+  "schemes": "color.ini",
+  "include": ["https://reesvarney.github.io/spicetify-dynamic-theme/theme.js"],
+  "branch": "main",
+  "authors": [{ "name": "reesvarney", "url": "https://github.com/reesvarney" }],
+  "tags": ["dark", "minimal"]
+}

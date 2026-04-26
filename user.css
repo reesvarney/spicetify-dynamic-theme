@@ -1,0 +1,32 @@
+html.custom1-force-light {
+  body {
+    filter: invert(1) hue-rotate(180deg);
+  }
+  img,
+  video,
+  .spicetify-bg-fix {
+    filter: invert(1) hue-rotate(180deg);
+  }
+}
+
+.dark-light-toggle {
+  background: none;
+  opacity: 0.7;
+  border: none;
+  color: white;
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 0.5em;
+  z-index: 1000;
+  transition:
+    opacity 0.3s,
+    font-weight 0.3s;
+  font-weight: bold;
+}
+.main-topBar-topbarContentRight {
+  width: calc(180px / (var(--zoom-level, 100) / 100)) !important;
+}
+.dark-light-toggle:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
