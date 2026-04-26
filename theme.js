@@ -14,16 +14,17 @@ const bgObserver = new MutationObserver((mutations) => {
     if (mutation.type === "childList") {
       mutation.addedNodes.forEach((node) => {
         if (node.nodeType === Node.ELEMENT_NODE) {
-          if (hasBackgroundImage(node)) {
-            node.classList.add("spicetify-bg-fix");
-          }
+          markElementIfNeeded(node);
           node.querySelectorAll("*").forEach((el) => {
-            if (hasBackgroundImage(el)) {
-              el.classList.add("spicetify-bg-fix");
-            }
+            markElementIfNeeded(el);
           });
         }
       });
+    } else if (
+      mutation.type === "attributes" &&
+      mutation.attributeName === "class"
+    ) {
+      markElementIfNeeded(mutation.target);
     }
   }
 });
@@ -31,15 +32,32 @@ const bgObserver = new MutationObserver((mutations) => {
 function initOnFirstLoad() {
   markBgElements();
   initSchemeToggle();
-  bgObserver.observe(document.body, { childList: true, subtree: true });
+  bgObserver.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["class"],
+  });
 }
 
 function markBgElements() {
   document.querySelectorAll("*").forEach((el) => {
-    if (hasBackgroundImage(el)) {
-      el.classList.add("spicetify-bg-fix");
-    }
+    markElementIfNeeded(el);
   });
+}
+
+function markElementIfNeeded(el) {
+  if (!(el instanceof Element)) {
+    return;
+  }
+
+  if (el.classList.contains("spicetify-bg-fix")) {
+    return;
+  }
+
+  if (hasBackgroundImage(el)) {
+    el.classList.add("spicetify-bg-fix");
+  }
 }
 
 function hasBackgroundImage(el) {
