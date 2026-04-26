@@ -22,7 +22,7 @@ const bgObserver = new MutationObserver((mutations) => {
       });
     } else if (
       mutation.type === "attributes" &&
-      mutation.attributeName === "class"
+      (mutation.attributeName === "class" || mutation.attributeName === "style")
     ) {
       markElementIfNeeded(mutation.target);
     }
@@ -36,7 +36,7 @@ function initOnFirstLoad() {
     childList: true,
     subtree: true,
     attributes: true,
-    attributeFilter: ["class"],
+    attributeFilter: ["class", "style"],
   });
 }
 

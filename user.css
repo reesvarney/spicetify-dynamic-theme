@@ -1,10 +1,11 @@
 html.custom1-force-light {
-  body {
+  body,
+  dialog {
     filter: invert(1) hue-rotate(180deg);
   }
-  img,
-  video,
-  .spicetify-bg-fix {
+  body img,
+  body video,
+  body .spicetify-bg-fix {
     filter: invert(1) hue-rotate(180deg);
   }
 }
