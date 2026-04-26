@@ -1,7 +1,7 @@
 {
   "name": "Dynamic Dark/ Light Theme",
   "description": "Toggle between dark and light themes based on the default appearance of the app",
-  "preview": "theme.png",
+  "preview": "preview.png",
   "readme": "README.md",
   "usercss": "user.css",
   "schemes": "color.ini",
