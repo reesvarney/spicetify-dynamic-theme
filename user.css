@@ -1,6 +1,7 @@
 html.custom1-force-light {
   body,
-  dialog {
+  dialog,
+  [role="dialog"] {
     filter: invert(1) hue-rotate(180deg);
   }
   body img,
