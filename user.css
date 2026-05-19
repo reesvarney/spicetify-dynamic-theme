@@ -32,3 +32,6 @@ html.custom1-force-light {
   opacity: 1;
   transform: scale(1.1);
 }
+.GenericModal__overlay {
+  filter: invert(1) hue-rotate(180deg);
+}
