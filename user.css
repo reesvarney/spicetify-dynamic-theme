@@ -1,6 +1,7 @@
 html.custom1-force-light {
   body,
   dialog,
+  .GenericModal__overlay,
   [role="dialog"] {
     filter: invert(1) hue-rotate(180deg);
   }
@@ -31,7 +32,4 @@ html.custom1-force-light {
 .dark-light-toggle:hover {
   opacity: 1;
   transform: scale(1.1);
-}
-.GenericModal__overlay {
-  filter: invert(1) hue-rotate(180deg);
 }
