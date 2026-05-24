@@ -56,7 +56,8 @@ html.custom1-force-light {
     filter: invert(1);
   }
 
-  body .spicetify-hue-fix {
+  body .spicetify-hue-fix,
+  .main-actionBar-ActionBarPlayButtonContainer svg {
     filter: hue-rotate(180deg);
   }
 }
