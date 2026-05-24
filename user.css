@@ -69,6 +69,9 @@ html.custom1-force-light {
     display: inline-block;
     filter: invert(1);
   }
+  .dark-light-toggle {
+    color: black;
+  }
 }
 
 .dark-light-toggle {
@@ -85,6 +88,7 @@ html.custom1-force-light {
     font-weight 0.3s;
   font-weight: bold;
 }
+
 .main-topBar-topbarContentRight {
   width: calc(180px / (var(--zoom-level, 100) / 100)) !important;
 }
