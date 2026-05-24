@@ -1,14 +1,63 @@
 html.custom1-force-light {
+  --spice-button: #e246ab;
+  --spice-highlight: #1a1a1a;
+  --spice-selected-row: #ffffff;
+  --spice-subtext: #b3b3b3;
+  --spice-text: #ffffff;
+  --spice-misc: #7f7f7f;
+  --spice-notification-error: #69ebdf;
+  --spice-main: #121212;
+  --spice-button-active: #e95eb7;
+  --spice-button-disabled: #535353;
+  --spice-main-elevated: #242424;
+  --spice-sidebar: #000000;
+  --spice-notification: #e5bb89;
+  --spice-tab-active: #333333;
+  --spice-player: #181818;
+  --spice-card: #282828;
+  --spice-highlight-elevated: #2a2a2a;
+  --spice-shadow: #000000;
+  --spice-rgb-button: 226, 70, 171;
+  --spice-rgb-highlight: 26, 26, 26;
+  --spice-rgb-selected-row: 255, 255, 255;
+  --spice-rgb-subtext: 179, 179, 179;
+  --spice-rgb-text: 255, 255, 255;
+  --spice-rgb-misc: 127, 127, 127;
+  --spice-rgb-notification-error: 105, 235, 223;
+  --spice-rgb-main: 18, 18, 18;
+  --spice-rgb-button-active: 233, 94, 183;
+  --spice-rgb-button-disabled: 83, 83, 83;
+  --spice-rgb-main-elevated: 36, 36, 36;
+  --spice-rgb-sidebar: 0, 0, 0;
+  --spice-rgb-notification: 229, 187, 137;
+  --spice-rgb-tab-active: 51, 51, 51;
+  --spice-rgb-player: 24, 24, 24;
+  --spice-rgb-card: 40, 40, 40;
+  --spice-rgb-highlight-elevated: 42, 42, 42;
+  --spice-rgb-shadow: 0, 0, 0;
+
+  button:hover * {
+    --background-highlight: #ee81c7 !important;
+  }
+
   body,
   dialog,
   .GenericModal__overlay,
   [role="dialog"] {
-    filter: invert(1) hue-rotate(180deg);
+    filter: invert(1);
   }
+
   body img,
-  body video,
+  body video {
+    filter: invert(1);
+  }
+
   body .spicetify-bg-fix {
-    filter: invert(1) hue-rotate(180deg);
+    filter: invert(1);
+  }
+
+  body .spicetify-hue-fix {
+    filter: hue-rotate(180deg);
   }
 }
 

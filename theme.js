@@ -2,6 +2,9 @@ const SCHEME_STORAGE_KEY = "custom1-forced-scheme";
 const TOGGLE_BUTTON_ID = "custom1-scheme-toggle";
 const HTML_LIGHT_CLASS = "custom1-force-light";
 const HTML_DARK_CLASS = "custom1-force-dark";
+const COLOR_FUNCTION_PATTERN =
+  /(?:rgb|hsl|hwb|lab|lch|oklab|oklch)a?\([^)]*\)|color\([^)]*\)/i;
+const HEX_COLOR_PATTERN = /#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})\b/i;
 
 if (document.readyState === "complete") {
   initOnFirstLoad();
@@ -51,16 +54,16 @@ function markElementIfNeeded(el) {
     return;
   }
 
-  if (el.classList.contains("spicetify-bg-fix")) {
-    return;
-  }
+  const shouldHaveBgFix = hasBackgroundImageUrl(el);
+  const shouldHaveHueFix =
+    !shouldHaveBgFix &&
+    (hasBackgroundGradient(el) || hasInlineColorOverride(el));
 
-  if (hasBackgroundImage(el)) {
-    el.classList.add("spicetify-bg-fix");
-  }
+  el.classList.toggle("spicetify-bg-fix", shouldHaveBgFix);
+  el.classList.toggle("spicetify-hue-fix", shouldHaveHueFix);
 }
 
-function hasBackgroundImage(el) {
+function hasBackgroundImageUrl(el) {
   const style = window.getComputedStyle(el);
 
   return (
@@ -69,6 +72,31 @@ function hasBackgroundImage(el) {
     style.backgroundImage.includes("url(") &&
     !style.backgroundImage.includes('url("data:image/svg+xml')
   );
+}
+
+function hasBackgroundGradient(el) {
+  const style = window.getComputedStyle(el);
+
+  return (
+    style.backgroundImage &&
+    style.backgroundImage !== "none" &&
+    !style.backgroundImage.includes("url(")
+  );
+}
+
+function hasInlineColorOverride(el) {
+  if (
+    !el.hasAttribute("style") ||
+    el.querySelector("img, picture, svg[role='img']")
+  ) {
+    return false;
+  }
+
+  return Array.from(el.style).some((propertyName) => {
+    const value = el.style.getPropertyValue(propertyName).trim();
+
+    return HEX_COLOR_PATTERN.test(value) || COLOR_FUNCTION_PATTERN.test(value);
+  });
 }
 
 function initSchemeToggle() {
