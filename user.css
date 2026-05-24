@@ -56,9 +56,18 @@ html.custom1-force-light {
     filter: invert(1);
   }
 
+  .main-connectBar-connectBar {
+    border-radius: 0.5em;
+  }
+
   body .spicetify-hue-fix,
   .main-actionBar-ActionBarPlayButtonContainer svg {
     filter: hue-rotate(180deg);
+  }
+
+  body .spicetify-emoji-hue-fix {
+    display: inline-block;
+    filter: invert(1);
   }
 }
 

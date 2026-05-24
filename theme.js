@@ -5,6 +5,9 @@ const HTML_DARK_CLASS = "custom1-force-dark";
 const COLOR_FUNCTION_PATTERN =
   /(?:rgb|hsl|hwb|lab|lch|oklab|oklch)a?\([^)]*\)|color\([^)]*\)/i;
 const HEX_COLOR_PATTERN = /#(?:[\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})\b/i;
+const EMOJI_PATTERN =
+  /(?:\p{Regional_Indicator}{2}|[#*0-9]\uFE0F?\u20E3|\p{Extended_Pictographic}(?:\p{Emoji_Modifier})?(?:\uFE0F|\uFE0E)?(?:\u200D\p{Extended_Pictographic}(?:\p{Emoji_Modifier})?(?:\uFE0F|\uFE0E)?)*)/gu;
+const EMOJI_FIX_CLASS = "spicetify-emoji-hue-fix";
 
 if (document.readyState === "complete") {
   initOnFirstLoad();
@@ -21,6 +24,11 @@ const bgObserver = new MutationObserver((mutations) => {
           node.querySelectorAll("*").forEach((el) => {
             markElementIfNeeded(el);
           });
+          wrapEmojisInNode(node);
+        }
+
+        if (node.nodeType === Node.TEXT_NODE) {
+          wrapEmojiTextNode(node);
         }
       });
     } else if (
@@ -28,19 +36,106 @@ const bgObserver = new MutationObserver((mutations) => {
       (mutation.attributeName === "class" || mutation.attributeName === "style")
     ) {
       markElementIfNeeded(mutation.target);
+    } else if (mutation.type === "characterData") {
+      wrapEmojiTextNode(mutation.target);
     }
   }
 });
 
 function initOnFirstLoad() {
   markBgElements();
+  wrapEmojisInNode(document.body);
   initSchemeToggle();
   bgObserver.observe(document.body, {
     childList: true,
     subtree: true,
     attributes: true,
+    characterData: true,
     attributeFilter: ["class", "style"],
   });
+}
+
+function wrapEmojisInNode(rootNode) {
+  if (!(rootNode instanceof Node)) {
+    return;
+  }
+
+  if (rootNode.nodeType === Node.TEXT_NODE) {
+    wrapEmojiTextNode(rootNode);
+    return;
+  }
+
+  if (rootNode.nodeType !== Node.ELEMENT_NODE) {
+    return;
+  }
+
+  const walker = document.createTreeWalker(rootNode, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+
+  while (walker.nextNode()) {
+    textNodes.push(walker.currentNode);
+  }
+
+  textNodes.forEach((textNode) => {
+    wrapEmojiTextNode(textNode);
+  });
+}
+
+function wrapEmojiTextNode(textNode) {
+  if (!(textNode instanceof Text) || !textNode.parentElement) {
+    return;
+  }
+
+  if (shouldSkipEmojiWrapping(textNode.parentElement)) {
+    return;
+  }
+
+  const text = textNode.nodeValue;
+  EMOJI_PATTERN.lastIndex = 0;
+  if (!text || !EMOJI_PATTERN.test(text)) {
+    return;
+  }
+
+  EMOJI_PATTERN.lastIndex = 0;
+  const fragment = document.createDocumentFragment();
+  let cursor = 0;
+
+  for (const match of text.matchAll(EMOJI_PATTERN)) {
+    const matchIndex = match.index ?? 0;
+    if (matchIndex > cursor) {
+      fragment.appendChild(
+        document.createTextNode(text.slice(cursor, matchIndex)),
+      );
+    }
+
+    const emojiSpan = document.createElement("span");
+    emojiSpan.className = EMOJI_FIX_CLASS;
+    emojiSpan.textContent = match[0];
+    fragment.appendChild(emojiSpan);
+
+    cursor = matchIndex + match[0].length;
+  }
+
+  if (cursor < text.length) {
+    fragment.appendChild(document.createTextNode(text.slice(cursor)));
+  }
+
+  textNode.replaceWith(fragment);
+}
+
+function shouldSkipEmojiWrapping(parentElement) {
+  if (parentElement.closest(`.${EMOJI_FIX_CLASS}`)) {
+    return true;
+  }
+
+  const tagName = parentElement.tagName;
+  return (
+    tagName === "SCRIPT" ||
+    tagName === "STYLE" ||
+    tagName === "NOSCRIPT" ||
+    tagName === "TEXTAREA" ||
+    tagName === "INPUT"
+  );
 }
 
 function markBgElements() {
